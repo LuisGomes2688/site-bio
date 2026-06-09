@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luis Gomes | Bio</title>
+    
+    <!-- ÍCONES FONT AWESOME (Importado conforme pedido) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* -----------------------------------------------------------
+           DESIGN GERAL (Cores Escuras e Responsividade)
+           ----------------------------------------------------------- */
+        :root {
+            /* Fundo com Gradiente Moderno e Escuro */
+            --bg-body: linear-gradient(135deg, #0f0f12 0%, #1a1a2e 100%);
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --accent-color: #3b82f6; /* Azul moderno para hovers e detalhes */
+            
+            /* EFEITO GLASSMORPHISM (Configuração base) */
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-blur: blur(10px);
+            
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--bg-body);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        /* Container que centraliza tudo no meio da tela */
+        .main-container {
+            width: 100%;
+            max-width: 600px; /* Largura profissional para "links in bio" */
+            text-align: center;
+        }
+
+        /* -----------------------------------------------------------
+           ESTILOS COMPARTILHADOS (Botões e Cards Glassmorphism)
+           ----------------------------------------------------------- */
+        .glass-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur); /* Suporte Safari */
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* -----------------------------------------------------------
+           CONTROLE DE VISIBILIDADE DAS PÁGINAS (JavaScript controla isso)
+           ----------------------------------------------------------- */
+        .page {
+            display: none; /* Escondido por padrão */
+            opacity: 0;
+            transform: translateY(20px);
+            /* TRANSICÃO SUAVE ao trocar de página */
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .page.active {
+            display: block; /* Mostra a página ativa */
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===========================================================
+           PÁGINA PRINCIPAL (Home)
+           =========================================================== */
+        
+        /* 1. Foto de perfil circular no topo */
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover; /* Garante que a foto não distorça */
+            border: 3px solid var(--accent-color);
+            margin-bottom: 15px;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+
+        /* 2. Nome abaixo da foto */
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        /* 3. Pequena descrição */
+        .profile-bio {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        /* Estilo dos Botões de Link (Centralizados) */
+        .link-buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .bio-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 18px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition); /* Animação suave no hover */
+            position: relative;
+        }
+
+        /* Ícones dentro dos botões à esquerda */
+        .bio-btn i {
+            position: absolute;
+            left: 20px;
+            font-size: 1.2rem;
+        }
+
+        /* HOVER ANIMADO (Efeito premium ao passar o mouse) */
+        .bio-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent-color);
+            transform: translateY(-2px); /* Levanta levemente */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ===========================================================
+           PÁGINA DE PROJETOS
+           =========================================================== */
+        
+        /* Botão Voltar no topo */
+        .back-nav {
+            text-align: left;
+            margin-bottom: 25px;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px;
+            transition: var(--transition);
+        }
+
+        .back-btn:hover {
+            color: var(--text-primary);
+        }
+
+        /* Seção "Sobre Mim" na página de projetos */
+        .about-section-projects {
+            margin-bottom: 30px;
+            padding: 20px;
+            text-align: left;
+        }
+
+        .about-section-projects h2 {
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+        
+        .about-section-projects p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* Container da grade de projetos */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* 1 Coluna no celular */
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        /* Tablet e Computador: 2 Colunas */
+        @media (min-width: 480px) {
+            .projects-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* -----------------------------------------------------------
+           CLASSE .project-card (REQUISITO: Pronta para uso)
+           ----------------------------------------------------------- */
+        .project-card {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Garante que a imagem siga o border-radius do card */
+            transition: var(--transition);
+        }
+
+        /* Hover no card de projeto */
+        .project-card:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        /* Imagem de capa no topo */
+        .project-card-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover; /* Corta a imagem para caber sem distorcer */
+        }
+
+        /* Conteúdo de texto do card */
+        .project-card-content {
+            padding: 15px;
+            text-align: left;
+            flex-grow: 1; /* Faz o conteúdo ocupar o espaço restante */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Título do projeto */
+        .project-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        /* Pequena descrição */
+        .project-card p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        /* Botão Acessar Site (dentro do card) */
+        .btn-access {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: #2563eb; /* Azul base */
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn-access:hover {
+            background: var(--accent-color); /* Azul mais claro no hover */
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+
+        <!-- ======================================================================
+             PÁGINA PRINCIPAL (Página de Bio)
+             ====================================================================== -->
+        <div id="page-home" class="page active">
+            
+            <!-- REQUISITO: Foto de perfil circular -->
+            <!-- Substitua 'profile.jpg' pela sua imagem real -->
+            <!-- <img src="https://via.placeholder.com/150" alt="Luis Gomes" class="profile-pic"> -->
+
+            <!-- REQUISITO: Nome "Luis Gomes" -->
+            <h1 class="profile-name">Luis Gomes</h1>
+
+            <!-- REQUISITO: Pequena descrição -->
+            <p class="profile-bio">
+                Tenho 17 anos e estou construindo meus primeiros projetos no mercado digital. Meu foco é desenvolver soluções inteligentes, validar novas ideias e transformar projetos em empresas 
+                digitais que gerem impacto real para milhares de pessoas.
+            </p>
+
+            <!-- TRÊS BOTÕES CENTRALIZADOS -->
+            <div class="link-buttons-container">
+                
+                <!-- BOTÃO 1: PROJETOS (Abre página interna) -->
+                <button onclick="navigateTo('page-projects')" class="bio-btn glass-item">
+                    <i class="fas fa-dollar-sign"></i> <!-- Ícone Cifrão -->
+                    PROJETOS
+                </button>
+
+                <!-- BOTÃO 2: INSTAGRAM (Link Externo) -->
+                <!-- O link 'href' é definido dinamicamente pelo JavaScript abaixo -->
+                <a href="#" id="link-instagram" target="_blank" class="bio-btn glass-item">
+                    <i class="fab fa-instagram"></i> <!-- Ícone Instagram -->
+                    @ooluis.gomes
+                </a>
+
+                <!-- BOTÃO 3: TIKTOK (Link Externo) -->
+                <!-- O link 'href' é definido dinamicamente pelo JavaScript abaixo -->
+                <a href="#" id="link-tiktok" target="_blank" class="bio-btn glass-item">
+                    <i class="fab fa-tiktok"></i> <!-- Ícone TikTok -->
+                    Em breve
+                </a>
+            </div>
+        </div>
+
+        <!-- ======================================================================
+             PÁGINA DE PROJETOS
+             ====================================================================== -->
+        <div id="page-projects" class="page">
+            
+            <!-- REQUISITO: Botão "Voltar" no topo -->
+            <div class="back-nav">
+                <button onclick="navigateTo('page-home')" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    Voltar
+                </button>
+            </div>
+
+            <!-- REQUISITO: Seção "Sobre Mim" antes dos projetos -->
+            <div class="about-section-projects glass-item">
+                <h2>Sobre Mim</h2>
+                <p>
+                    Tenho 17 anos e estou construindo meus primeiros projetos no mercado digital. Meu foco é desenvolver soluções inteligentes, validar 
+                    novas ideias e transformar projetos em empresas digitais que gerem impacto real para milhares de pessoas.
+                    Abaixo você confere alguns dos meus trabalhos mais recentes.
+                </p>
+            </div>
+
+            <!-- CONTAINER ONDE FICAM OS PROJETOS -->
+            <div class="projects-grid">
+
+                <!-- 
+                    ===========================================================
+                    ÁREA DE ADIÇÃO DE NOVOS PROJETOS
+                    ===========================================================
+                    INSTRUÇÕES PARA O LUIS:
+                    Para adicionar um novo projeto, copie todo o bloco 'div' abaixo 
+                    (que tem a classe project-card), cole logo abaixo do anterior e 
+                    edite a imagem (src), título, descrição e link (href).
+                -->
+
+                <!-- INÍCIO DO PROJETO 1 (Exemplo) -->
+                <div class="project-card glass-item">
+                    <!-- Imagem de capa -->
+                    <img src="images/Captura de tela 2026-06-09 134821.png" alt="Capa Projeto 1" class="project-card-img">
+                    
+                    <div class="project-card-content">
+                        <!-- Título do projeto -->
+                        <h3>BusinessHub</h3>
+                        <!-- Pequena descrição -->
+                        <p>Crie seu site profissional em minutos utilizando layouts prontos e ferramentas visuais. Gerencie equipes, 
+                            conteúdos e operações do seu negócio sem precisar escrever uma linha de código.</p>
+                        <!-- Botão Acessar Site -->
+                        <a href="#" target="_blank" class="btn-access">Em Breve</a>
+                    </div>
+                </div>
+                <!-- FIM DO PROJETO 1 -->
+
+                <!-- INÍCIO DO PROJETO 2 (Exemplo) -->
+                <!-- <div class="project-card glass-item">
+                    <img src="https://via.placeholder.com/300x150/1a1a2e/ffffff?text=Projeto+2" alt="Capa Projeto 2" class="project-card-img">
+                    <div class="project-card-content">
+                        <h3>App de Finanças</h3>
+                        <p>Dashboard pessoal com efeito glassmorphism para controle de gastos.</p>
+                        <a href="https://exemplo.com/projeto2" target="_blank" class="btn-access">Acessar Site</a>
+                    </div>
+                </div> -->
+                <!-- FIM DO PROJETO 2 -->
+
+                <!-- Adicione novos projetos aqui seguindo o modelo acima -->
+
+            </div> <!-- Fim da projects-grid -->
+        </div> <!-- Fim da page-projects -->
+
+    </div> <!-- Fim da main-container -->
+
+    <!-- ======================================================================
+         JAVASCRIPT (Lógica e Configuração)
+         ====================================================================== -->
+    <script>
+        // -----------------------------------------------------------
+        // ÁREA DE CONFIGURAÇÃO - LUIS, ALTERE SEUS LINKS AQUI
+        // -----------------------------------------------------------
+        const SEUS_LINKS = {
+            // Coloque seu link completo do Instagram aqui
+            instagram: "https://www.instagram.com/ooluis.gomes/",
+            
+            // Coloque seu link completo do TikTok aqui
+            tiktok: "#"
+        };
+
+        // -----------------------------------------------------------
+        // LÓGICA DE INICIALIZAÇÃO E NAVEGAÇÃO
+        // -----------------------------------------------------------
+
+        // Função executada assim que a página carrega
+        document.addEventListener('DOMContentLoaded', () => {
+            // Aplica os links configurados acima aos botões da HTML
+            document.getElementById('link-instagram').href = SEUS_LINKS.instagram;
+            document.getElementById('link-tiktok').href = SEUS_LINKS.tiktok;
+        });
+
+        // Função para alternar entre a página Home e Projetos com animação suave
+        function navigateTo(pageId) {
+            const currentPage = document.querySelector('.page.active');
+            const nextPage = document.getElementById(pageId);
+
+            if (currentPage && nextPage) {
+                // Inicia sumiço da página atual
+                currentPage.style.opacity = '0';
+                currentPage.style.transform = 'translateY(-20px)';
+
+                // Aguarda o fim da animação de saída (400ms) para trocar
+                setTimeout(() => {
+                    currentPage.classList.remove('active');
+                    
+                    nextPage.classList.add('active');
+                    // Pequeno delay para garantir que o navegador renderizou o display:block
+                    // antes de iniciar a animação de entrada
+                    setTimeout(() => {
+                        nextPage.style.opacity = '1';
+                        nextPage.style.transform = 'translateY(0)';
+                    }, 50);
+                    
+                }, 400);
+            }
+        }
+    </script>
+</body>
+</html>
+
+```
